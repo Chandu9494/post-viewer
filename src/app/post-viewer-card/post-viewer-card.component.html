@@ -1,5 +1,44 @@
+<mat-card
+  [appearance]="'outlined'"
+  class="post-viewer-card"
+  [ngClass]="{ 'post-viewer-card__active': post?.id === selectedPostId }"
+>
+  <mat-card-content
+    *ngIf="post && displayValue"
+    class="post-viewer-card__content"
+  >
+    <div
+      class="post-viewer-card__content"
+      *ngIf="post.id === selectedPostId; else defaultContent"
+      #tooltip="matTooltip"
+      matTooltip="
+    {{ displayValue + ': ' + displayText }}"
+      [matTooltipPosition]="'right'"
+      [attr.aria-label]="'card content ' + displayValue + ': ' + displayText"
+    >
+      {{ displayText }}
+    </div>
+    <ng-template
+      #defaultContent
+      matTooltip="
+    {{ post.title }}"
+      [matTooltipPosition]="'right'"
+    >
+      {{ post.title }}
+    </ng-template>
+  </mat-card-content>
 
-<mat-card [appearance]="'outlined'" class="post-viewer-card">
-    <mat-card-content> {{post?.title }}</mat-card-content>
-    <mat-card-content> id S</mat-card-content>
+  <div
+    class="post-viewer-card__content_indicators"
+    *ngIf="displayFields?.length"
+  >
+    <span
+      *ngFor="let field of displayFields"
+      class="post-viewer-card__content_indicators_dot"
+      [ngClass]="{
+        'post-viewer-card__content_indicators_dot_active':
+          post?.id === selectedPostId && field === displayValue
+      }"
+    ></span>
+  </div>
 </mat-card>

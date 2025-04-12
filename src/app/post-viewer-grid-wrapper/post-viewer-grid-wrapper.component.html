@@ -1,10 +1,40 @@
-<h1>Posts Viewer</h1>
-<div class="post-viewer-wrapper__card_container">
-
-  <app-post-viewer-card
-    *ngFor="let post of postsList | async"
-    class="post-viewer-wrapper__card"
-    [post]="post"
-    (click)="onCardClicked(post.id)"
-  ></app-post-viewer-card>
+<div class="post-viewer-wrapper">
+  <h1 class="post-viewer-wrapper__header">Posts Viewer</h1>
+  <div class="post-viewer-wrapper__info_section">
+    <div class="post-viewer-wrapper__info_section__selected_post_id">
+      {{
+        (selectedPostId | async) !== 0
+          ? "Current post id : " + (selectedPostId | async)
+          : "View the content by clicking on each tile"
+      }}
+    </div>
+    <button
+      class="post-viewer-wrapper__info_section__reset_btn"
+      [ngClass]="{
+        'post-viewer-wrapper__info_section__reset_btn_disabled':
+          (selectedPostId | async) === 0
+      }"
+      [attr.aria-label]="'post viewer reset button'"
+      [disabled]="(selectedPostId | async) === 0"
+      (click)="onResetClicked()"
+    >
+      Reset
+    </button>
+  </div>
+  <div
+    *ngIf="displayKey | async as key"
+    class="post-viewer-wrapper__card_container"
+  >
+    <app-post-viewer-card
+      *ngFor="let post of postsList | async"
+      class="post-viewer-wrapper__card"
+      tabindex="0"
+      role="button"
+      [post]="post"
+      [displayValue]="displayKey | async"
+      [selectedPostId]="selectedPostId | async"
+      (click)="onCardClicked(post.id)"
+      (keydown.enter)="onCardClicked(post.id)"
+    ></app-post-viewer-card>
+  </div>
 </div>

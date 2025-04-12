@@ -3,9 +3,8 @@ import { PostViewerGridWrapperComponent } from './post-viewer-grid-wrapper/post-
 
 @Component({
   selector: 'app-root',
-  imports: [ PostViewerGridWrapperComponent],
+  imports: [PostViewerGridWrapperComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'post-viewer';

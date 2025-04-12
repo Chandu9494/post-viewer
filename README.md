@@ -1,5 +1,10 @@
 # PostViewer
 
+## Getting Started
+
+Start by cloning the github repo :
+https://github.com/Chandu9494/post-viewer.git
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.7.
 
 ## Development server
@@ -10,21 +15,7 @@ To start a local development server, run:
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
+Visit http://localhost:4200/ in your browser to see the application running.
 
 ## Building
 
@@ -44,32 +35,19 @@ To execute unit tests with the [Karma](https://karma-runner.github.io) test runn
 ng test
 ```
 
-## Running end-to-end tests
+## About the structure and design
 
-For end-to-end (e2e) testing, run:
+The app contains mainly two components, PostViewerGridWrapperComponent & PostViewerCardComponent.
 
-```bash
-ng e2e
-```
+PostViewerGridWrapperComponent, as the name suggests, acts as a wrapper to display the cards.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+PostViewerCardComponent displays each post as a card ([angular material card ](https://material.angular.io/components/card/overview)), which reacts to clicks to
+display properties of the post one by one.
 
-## Additional Resources
+The reset button on top right can be used for resetting all cards to default state (disabled if no posts are selected).
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The cards are keyboard accessible. The color palette is also selected considering accessibility (WCAG AA, AAA)
 
+State management is done using NGRX.
 
-
-
-// reference for chandana - 
-
- 1. show the grid,
- 2. display the square
- 3. testcases and e2e
- 4. click events
- 5. reset
- 6. ngrx for state
- 7. jspnplaceholderapi
- 8. update readme and changelog
- 9. WCAG and aria
- 10. Add trackby for loops
+Formatting is done using Prettier.

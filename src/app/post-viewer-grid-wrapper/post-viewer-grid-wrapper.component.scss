@@ -1,13 +1,46 @@
-.post-viewer-wrapper{ //update name and classes
-    // aspect-ratio: 1/1;
-    // display: flex
-    &__card_container{
-        display: grid;
-        grid-template-columns: repeat(10,1fr);
-        gap: 10px; //t update to rem
+.post-viewer-wrapper {
+  background-color: var(--color-primary);
+  &__header {
+    justify-self: center;
+    padding: 20px;
+    color: var(--color-secondary);
+  }
+  &__card_container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  &__card {
+    aspect-ratio: 1/1;
+  }
+
+  &__info_section {
+    display: flex;
+    justify-content: space-between;
+
+    &__selected_post_id {
+      padding: 10px;
+      font-weight: 800;
+      font-size: large;
+      color: var(--color-secondary);
     }
 
-    &__card {
-        aspect-ratio: 1/1;
+    &__reset_btn {
+      background-color: var(--color-secondary);
+      color: var(--color-white);
+      border: 1px var(--color-secondary-light) solid;
+      border-radius: 15px;
+      font-weight: 200;
+      cursor: pointer;
+      padding: 8px 16px;
+      margin: 16px;
+      &_disabled {
+        background-color: var(--color-disabled);
+        cursor: no-drop;
+        border-color: var(--color-disabled);
+      }
     }
+  }
 }

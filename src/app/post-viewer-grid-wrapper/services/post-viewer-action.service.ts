@@ -1,49 +1,65 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject, takeUntil } from 'rxjs';
 import { IPost } from '../../shared/post-viewer.interface';
-import { PostViewerApiService } from './post-viewer-api.service';
 import { Store } from '@ngrx/store';
-import { getPosts } from '../../store/posts.action';
-import { selectAllPosts } from '../../store/posts.selectors';
+import { getPosts, resetCards, selectPost } from '../../store/posts.action';
+import {
+  selectAllPosts,
+  selectPropertyKeyMap,
+} from '../../store/posts.selectors';
 
-@Injectable({ providedIn: 'root' }) //don't neeed in root level
+@Injectable({ providedIn: 'root' })
 export class PostViewerActionService {
-  private readonly _posts = new BehaviorSubject<IPost[]>([]);
+  private readonly _displayKey = new BehaviorSubject<string>('title');
+  private _selectedPostId = new BehaviorSubject<number>(0);
   private _destroy = new Subject();
-  postsList: Observable<IPost[]>;
 
-  constructor(
-    private readonly postViewerApiService: PostViewerApiService,
-    private readonly store: Store
-  ) {
-    this.postsList = this.store.select(selectAllPosts)
-    // this.postsList = this._posts.asObservable();
+  postsList: Observable<IPost[]>;
+  displayKey: Observable<string>;
+  selectedPostIdObs: Observable<number>;
+  selectedPostId: number = -1;
+
+  constructor(private readonly store: Store) {
+    this.postsList = this.store.select(selectAllPosts);
+    this.displayKey = this._displayKey.asObservable();
+    this.selectedPostIdObs = this._selectedPostId.asObservable();
   }
 
   initialize(): void {
-    //  this.postViewerApiService.getPosts().subscribe((res) => {
-    //   console.log(res);
-    // });
-
-    // this.postViewerApiService.getPosts()
-    //   .pipe(takeUntil(this._destroy))
-    //   .subscribe((posts) => {
-    //     this._posts.next(posts);
-    //   });
     this.dispatchLoadPosts();
   }
 
-  onDestroy() {
+  onDestroy(): void {
     this._destroy.next('');
     this._destroy.complete();
   }
 
-  dispatchLoadPosts() {
+  dispatchLoadPosts(): void {
     this.store.dispatch(getPosts());
   }
 
-  onCardClicked(postId: string){
-    console.log('receivedPost', postId)
+  onCardClicked(postId: number): void {
+    this._selectedPostId.next(postId);
+    this.store.dispatch(selectPost({ postId }));
+    this.getDisplayValue(postId);
+  }
+
+  getDisplayValue(postId: number): void {
+    this.store
+      .select(selectPropertyKeyMap)
+      .pipe(
+        takeUntil(this._destroy),
+        map((keyMap) => {
+          const key = keyMap[postId] || 'title';
+          this._displayKey.next(key);
+        })
+      )
+      .subscribe();
+  }
+
+  onResetClicked(): void {
+    this._selectedPostId.next(0);
+    this.store.dispatch(resetCards());
+    this.onDestroy();
   }
 }

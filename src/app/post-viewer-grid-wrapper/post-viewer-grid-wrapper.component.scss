@@ -1,0 +1,13 @@
+.post-viewer-wrapper{ //update name and classes
+    // aspect-ratio: 1/1;
+    // display: flex
+    &__card_container{
+        display: grid;
+        grid-template-columns: repeat(10,1fr);
+        gap: 10px; //t update to rem
+    }
+
+    &__card {
+        aspect-ratio: 1/1;
+    }
+}

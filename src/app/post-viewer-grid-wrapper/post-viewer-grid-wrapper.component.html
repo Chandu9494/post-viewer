@@ -1,0 +1,10 @@
+<h1>Posts Viewer</h1>
+<div class="post-viewer-wrapper__card_container">
+
+  <app-post-viewer-card
+    *ngFor="let post of postsList | async"
+    class="post-viewer-wrapper__card"
+    [post]="post"
+    (click)="onCardClicked(post.id)"
+  ></app-post-viewer-card>
+</div>

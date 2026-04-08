@@ -24,6 +24,7 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
   readonly postsList = this.postViewerActionService.postsList;
   readonly displayKey = this.postViewerActionService.displayKey;
   readonly selectedPostId = this.postViewerActionService.selectedPostIdObs;
+  readonly loading = this.postViewerActionService.loadingObs;
 
   constructor(
     private readonly postViewerActionService: PostViewerActionService

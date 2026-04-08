@@ -14,14 +14,19 @@ export class PostViewerCardComponent implements OnChanges {
   @Input() post: IPost | undefined;
   @Input() displayValue: string | null = 'title';
   @Input() selectedPostId: number | null = 0;
+  @Input() isLoading = false;
   readonly displayFields = ['userId', 'id', 'title', 'body'];
   displayText: string | number = '';
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['displayValue']) {
       if (this.post) {
-        this.displayText = this.post[this.displayValue as keyof IPost];
+        this.displayText =  this.post[this.displayValue as keyof IPost] ?? '';
       }
     }
   }
+  onImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  img.src = 'https://picsum.photos/300/200';
+}
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as PostActions from './posts.action';
 import {
   catchError,
+  filter,
   map,
   mergeMap,
   switchMap,
@@ -11,7 +12,9 @@ import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { PostViewerApiService } from '../post-viewer-grid-wrapper/services/post-viewer-api.service';
 import { Store } from '@ngrx/store';
-import { selectAllPosts, selectPropertyKeyMap } from './posts.selectors';
+import { selectAllPosts, selectImages, selectPropertyKeyMap } from './posts.selectors';
+import { ImageService } from '../shared/services/post-viewer-image.service';
+import { loadImages, loadImagesSuccess, loadImagesFailure } from './image.action';
 
 @Injectable()
 export class PostsEffects {
@@ -21,7 +24,8 @@ export class PostsEffects {
   constructor(
     private readonly actions: Actions,
     private readonly postViewerApiService: PostViewerApiService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly imageService: ImageService,
   ) {}
 
   loadPostsObs = createEffect(() =>
@@ -70,4 +74,18 @@ export class PostsEffects {
       })
     )
   );
+
+  loadImagesObs = createEffect(() =>
+  this.actions.pipe(
+    ofType(loadImages),
+    withLatestFrom(this.store.select(selectImages)),
+    filter(([_, images]) => !images || images.length === 0),
+    switchMap(() =>
+      this.imageService.getImages().pipe(
+        map(images => loadImagesSuccess({ images })),
+        catchError(error => of(loadImagesFailure({ error })))
+      )
+    )
+  )
+);
 }

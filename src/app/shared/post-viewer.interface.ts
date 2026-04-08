@@ -3,6 +3,7 @@ export interface IPost {
   id: number;
   title: string;
   body: string;
+  imageUrl?: string; 
 }
 
 export interface IPostsState {
@@ -10,4 +11,10 @@ export interface IPostsState {
   error: string | null;
   propertyKeyMap: { [postId: number]: string };
   selectedPostId?: number | null;
+}
+
+export interface ImageState {
+  images: string[];
+  loading: boolean;
+  error: any;
 }

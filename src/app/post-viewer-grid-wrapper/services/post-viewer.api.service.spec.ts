@@ -1,14 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { PostViewerApiService } from './post-viewer-api.service';
 import { IPost } from '../../shared/post-viewer.interface';
 import {
-  HttpClient,
-  HttpHandler,
   provideHttpClient,
 } from '@angular/common/http';
 

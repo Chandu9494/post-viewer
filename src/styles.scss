@@ -1,21 +1,31 @@
 @use "@angular/material" as mat;
 
 :root {
-  --color-primary: #ebebeb;
-  --color-secondary: #1f513f;
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-secondary-light: #2a5545;
-  --color-disabled: #a6d4c0;
-  --color-text: #212121;
-  --color-background: #f0e6e2;
-  --color-border: #1e1e1e;
-  --color-active-card: #9f837b;
+  --bg-main: #0f172a;
+  --bg-surface: #111827;
+  --bg-card: #1f2937;
 
-  @include mat.tooltip-overrides(
-    (
-      container-color: var(--color-black),
-      supporting-text-color: var(--color-white),
-    )
-  );
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+
+  --accent: #7c3aed;
+  --accent-soft: #c4b5fd;
+
+  --border: rgba(255, 255, 255, 0.08);
+
+  --hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+@include mat.tooltip-overrides(
+  (
+    container-color: #111827,
+    supporting-text-color: #f9fafb,
+  )
+);
+
+body {
+  margin: 0;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
 }

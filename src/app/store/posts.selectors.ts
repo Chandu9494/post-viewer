@@ -23,3 +23,5 @@ export const selectPropertyKeyMap = createSelector(
   selectPostsState,
   (state: IPostsState) => state.propertyKeyMap
 );
+
+export const selectImages = (state: any) => state.images.images ?? [];

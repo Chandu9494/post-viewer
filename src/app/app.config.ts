@@ -8,7 +8,7 @@ import {
 } from '@angular/platform-browser';
 import { provideStore } from '@ngrx/store';
 import { provideHttpClient } from '@angular/common/http';
-import { postsReducer } from './store/posts.reducer';
+import { imageReducer, postsReducer } from './store/posts.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { PostsEffects } from './store/posts.effects';
 
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideStore({ posts: postsReducer }),
+    provideStore({ posts: postsReducer, images: imageReducer }),
     provideEffects([PostsEffects]),
     provideHttpClient(),
   ],

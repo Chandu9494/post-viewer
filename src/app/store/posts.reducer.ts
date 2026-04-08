@@ -1,6 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import * as PostActions from './posts.action';
 import { initialState } from '../shared/post-viewer.constants';
+import { loadImages, loadImagesSuccess, loadImagesFailure } from './image.action';
+import { ImageState } from '../shared/post-viewer.interface';
 
 export const postsReducer = createReducer(
   initialState,
@@ -31,5 +33,20 @@ export const postsReducer = createReducer(
   on(PostActions.resetCards, (state) => ({
     ...state,
     propertyKeyMap: {},
+  }))
+);
+
+export const imageReducer = createReducer(
+  initialState,
+  on(loadImages, state => ({ ...state, loading: true })),
+  on(loadImagesSuccess, (state, { images }) => ({
+    ...state,
+    loading: false,
+    images
+  })),
+  on(loadImagesFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
   }))
 );

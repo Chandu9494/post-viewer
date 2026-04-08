@@ -1,53 +1,166 @@
-# PostViewer
+# 📦 Post Viewer (Angular + NgRx)
 
-## Getting Started
+## 🚀 Overview
+A reactive Angular application that demonstrates **state-driven UI composition** using NgRx and RxJS.
 
-Start by cloning the github repo :
-https://github.com/Chandu9494/post-viewer.git
+The application fetches posts from an API and enriches them with images from an external source, combining both streams into a unified UI model.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.7.
+---
 
-## Development server
+## 🧠 Key Concepts Demonstrated
 
-To start a local development server, run:
+### Reactive Data Composition
+Posts and images are fetched independently and combined using RxJS:
 
-```bash
-ng serve
+- Decoupled data sources  
+- Declarative UI transformation  
+- Avoids mutation-heavy logic  
+
+---
+
+### Derived State with NgRx
+The UI consumes **derived state** rather than raw API responses:
+
+- Selectors compute display values  
+- UI remains independent of backend shape  
+- Predictable state transitions  
+
+---
+
+### Controlled Side Effects
+NgRx Effects are used for:
+
+- Fetching posts  
+- Fetching images  
+- Preventing redundant API calls  
+
+---
+
+### Deterministic Image Mapping
+Each post is assigned an image using a modulo-based mapping:
+
+```ts
+imageUrl = images[post.id % images.length]
 ```
 
-Visit http://localhost:4200/ in your browser to see the application running.
+This ensures:
+- Stable UI across reloads  
+- No randomness or flicker  
+- Consistent visual identity  
 
-## Building
+---
 
-To build the project run:
+## ⚙️ Architecture Overview
 
-```bash
-ng build
-```
+The app consists of two primary components:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 1. PostViewerGridWrapperComponent
+- Acts as container  
+- Handles orchestration of data streams  
+- Connects UI to store  
 
-## Running unit tests
+### 2. PostViewerCardComponent
+- Displays individual post  
+- Handles interaction (click, tooltip)  
+- Cycles through post properties  
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+### State Management (NgRx)
+- Store holds posts and UI state  
+- Effects manage API calls  
+- Selectors expose derived data  
 
-## About the structure and design
+---
 
-The app contains mainly two components, PostViewerGridWrapperComponent & PostViewerCardComponent.
+### Design Decisions
 
-PostViewerGridWrapperComponent, as the name suggests, acts as a wrapper to display the cards.
+#### Why a Single Service?
+- Avoided unnecessary abstraction for demo scope  
+- Prioritized clarity and readability  
 
-PostViewerCardComponent displays each post as a card ([angular material card ](https://material.angular.io/components/card/overview)), which reacts to clicks to
-display properties of the post one by one.
+#### Why Combine Streams Instead of Mutating Store?
+- Keeps store normalized  
+- Avoids redundant writes  
+- Makes transformation explicit and testable  
 
-The reset button on top right can be used for resetting all cards to default state (disabled if no posts are selected).
+---
 
-The cards are keyboard accessible. The color palette is also selected considering accessibility (WCAG AA, AAA)
+## ✨ Features
 
-State management is done using NGRX.
+- 📊 Responsive grid layout  
+- 🖼 Dynamic image enrichment  
+- ⚡ Reactive UI updates  
+- 🎯 Click-based state transitions  
+- 💫 Skeleton loading state  
+- 🌙 Dark-themed modern UI  
+- ♿ Keyboard accessibility  
 
-Formatting is done using Prettier.
+---
+
+## 🧩 Tech Stack
+
+- Angular (Standalone Components)
+- NgRx (Store + Effects)
+- RxJS
+- Angular Material
+- Pixabay API
+
+---
+
+## 🛠 Getting Started
+
+Clone the repository: git clone https://github.com/Chandu9494/post-viewer.git 
+
+
+Install dependencies:
+npm install
+
+Run the app:
+
+npm start
+Visit:
+http://localhost:4200/
+
+---
+
+## 🧪 Testing
+
+Run unit tests:
+npm test
+
+
+---
+
+## 🏗 Build
+npm run build
+
+
+---
+
+## 🎯 What This Project Showcases
+
+This project focuses on:
+
+- Thinking in **streams instead of imperative flows**  
+- Designing UI as a **function of state**  
+- Making **intentional architectural trade-offs**  
+- Balancing **simplicity vs scalability**  
+
+---
+
+## 🚀 Future Improvements
+
+- Move derived mapping into memoized selectors  
+- Add pagination / infinite scroll  
+- Introduce error handling states  
+- Improve test coverage  
+- Enhance accessibility further  
+
+---
+
+## 💬 Closing Note
+
+This project is not just about rendering posts —  
+it demonstrates how to build **scalable, reactive frontend systems using Angular and NgRx**.
+

@@ -161,6 +161,4 @@ This project focuses on:
 
 ## 💬 Closing Note
 
-This project is not just about rendering posts —  
-it demonstrates how to build **scalable, reactive frontend systems using Angular and NgRx**.
-
+Built to explore state-driven UI and reactive data composition in Angular.

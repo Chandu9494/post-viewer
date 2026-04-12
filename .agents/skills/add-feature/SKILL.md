@@ -1,45 +1,77 @@
 ---
 name: add-feature
-description: Interview the user for feature requirements, then implement the feature on a new branch from main.
+description: >
+  Reusable workflow for adding any new feature. Interviews the user for
+  requirements, creates a branch, implements, verifies, and delivers a PR.
+  Invoke with: @add-feature or @add-feature <feature-name>
 argument-hint: <feature-name (optional)>
 triggers: ["user"]
 ---
 
-## Interview
+## 1 — Interview
 
-1. Ask the user for the **feature name** (e.g., "dark-mode", "pagination", "search").
-2. Ask follow-up questions to gather requirements:
-   - Where should the feature be placed in the UI?
-   - Should state persist (localStorage, URL params, etc.)?
-   - Any default behavior or OS-level preferences to respect?
-   - Color scheme, styling, or UX preferences?
-3. Summarize the requirements back to the user for confirmation before proceeding.
+If a feature name was passed as `$ARGUMENTS`, use it. Otherwise ask:
 
-## Setup
+1. **Feature name** — Ask the user for a short kebab-case name
+   (e.g., `dark-mode`, `infinite-scroll`, `search-bar`, `user-auth`).
+2. **Requirements** — Use `content_type="user_question"` to ask the user
+   these questions (batch them into a single message when possible):
+   - Where in the UI should the feature live? (e.g., header, sidebar, card, new page)
+   - Does the feature need to persist state? If so, how? (localStorage, URL params, backend API, none)
+   - Any default/initial behavior to respect? (e.g., OS preference, logged-in state, empty state)
+   - Styling or UX preferences? (colors, animations, responsive behavior)
+   - Any third-party libraries or APIs required?
+3. **Confirm** — Summarize all gathered requirements back to the user in a
+   bulleted list. Wait for explicit confirmation before proceeding.
 
-1. Clone or pull the latest `main` branch of the repository.
-2. Run `npm install` to ensure dependencies are up to date.
-3. Create a new feature branch: `git checkout -b devin/<timestamp>-<feature-name>`.
+## 2 — Setup
 
-## Implement
+1. `git checkout main && git pull origin main`
+2. `npm install`
+3. `git checkout -b devin/$(date +%s)-<feature-name>`
 
-1. Explore the existing codebase to understand the architecture (components, services, store, styles).
-2. Implement the feature following existing conventions:
-   - Use Angular standalone components.
-   - Use CSS custom properties (variables) defined in `src/styles.scss` for theming.
-   - Use Angular Material components where appropriate.
-   - Keep services in `src/app/shared/services/` for shared logic.
-3. Ensure the feature is accessible (aria labels, keyboard navigation).
-4. Use the existing NgRx store pattern if state management is needed.
+## 3 — Explore
 
-## Verify
+Before writing any code, read and understand the existing codebase:
 
-1. Run `npm run build` and confirm zero errors.
-2. Run `npm test` if tests exist for affected components.
-3. Manually verify the feature works as expected.
+1. Scan the project structure (`src/app/` tree, `angular.json`, `package.json`).
+2. Identify existing patterns:
+   - Component style: standalone vs NgModule-based
+   - State management: NgRx store, services with BehaviorSubject, signals, etc.
+   - Styling approach: CSS variables in `src/styles.scss`, component SCSS, Angular Material theme
+   - Routing: lazy-loaded routes, route guards
+3. Note the conventions so the new feature matches them.
 
-## Deliver
+## 4 — Implement
 
-1. Commit changes with a descriptive message.
-2. Push the branch and create a pull request.
-3. Share the PR link with the user.
+1. Create or modify files following the conventions discovered in step 3.
+   General rules:
+   - **Components** — Use the same component style as the rest of the app
+     (standalone components with `imports` array in this repo).
+   - **Services** — Place shared services in `src/app/shared/services/`.
+   - **Theming** — Define any new colors as CSS custom properties in
+     `src/styles.scss` under both `:root` / `[data-theme="dark"]` and
+     `[data-theme="light"]` blocks so dark mode works automatically.
+   - **Angular Material** — Import Material modules as needed.
+   - **Accessibility** — Add `aria-label`, keyboard handlers, and
+     semantic HTML where appropriate.
+   - **State** — Use the existing state management pattern (NgRx or
+     service-based BehaviorSubject) rather than introducing a new one.
+2. Keep changes minimal and focused on the requested feature.
+3. Do NOT modify or delete existing tests to make them pass.
+
+## 5 — Verify
+
+1. `npm run build` — must complete with **zero errors**.
+2. `npm test` — run if tests exist; fix any failures caused by your changes.
+3. Start the dev server (`npx ng serve`) and visually verify the feature
+   works as expected. Take a screenshot or record for proof.
+
+## 6 — Deliver
+
+1. `git add` only the files you changed (no `git add .`).
+2. Commit with a descriptive conventional-commit message:
+   `feat: <short description of the feature>`
+3. `git push origin <branch-name>`
+4. Create a pull request using the `git_create_pr` tool.
+5. Share the PR link with the user and ask for review.

@@ -12,12 +12,12 @@ const THEME_STORAGE_KEY = 'post-viewer-theme';
 export class ThemeService {
   private readonly isBrowser: boolean;
   private readonly themeSubject: BehaviorSubject<Theme>;
-
-  readonly theme$ = this.getThemeSubject().asObservable();
+  readonly theme$;
 
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.themeSubject = new BehaviorSubject<Theme>(this.resolveInitialTheme());
+    this.theme$ = this.themeSubject.asObservable();
     this.applyTheme(this.themeSubject.value);
   }
 
@@ -60,10 +60,4 @@ export class ThemeService {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   }
 
-  private getThemeSubject(): BehaviorSubject<Theme> {
-    if (!this.themeSubject) {
-      return new BehaviorSubject<Theme>('dark');
-    }
-    return this.themeSubject;
-  }
 }

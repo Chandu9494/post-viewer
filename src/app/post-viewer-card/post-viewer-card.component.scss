@@ -7,9 +7,8 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  transition: all 0.3s ease;
   box-shadow: 0 10px 30px var(--card-shadow);
-  transition: all 0.3s ease, background-color 0.3s ease;
+  transition: all 0.3s ease;
   align-items: stretch;
   justify-content: flex-start;
 }

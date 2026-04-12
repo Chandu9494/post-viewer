@@ -5,6 +5,8 @@ import { PostViewerActionService } from './services/post-viewer-action.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { ThemeService } from '../shared/services/theme.service';
 
 @Component({
   selector: 'app-post-viewer-grid-wrapper',
@@ -15,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatIconModule,
   ],
   templateUrl: './post-viewer-grid-wrapper.component.html',
   styleUrl: './post-viewer-grid-wrapper.component.scss',
@@ -25,9 +28,11 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
   readonly displayKey = this.postViewerActionService.displayKey;
   readonly selectedPostId = this.postViewerActionService.selectedPostIdObs;
   readonly loading = this.postViewerActionService.loadingObs;
+  readonly theme$ = this.themeService.theme$;
 
   constructor(
-    private readonly postViewerActionService: PostViewerActionService
+    private readonly postViewerActionService: PostViewerActionService,
+    private readonly themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +45,10 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
 
   onResetClicked(): void {
     this.postViewerActionService.onResetClicked();
+  }
+
+  onToggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   ngOnDestroy(): void {

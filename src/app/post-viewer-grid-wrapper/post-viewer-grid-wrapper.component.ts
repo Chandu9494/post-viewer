@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ThemeService } from '../shared/services/theme.service';
 
 @Component({
@@ -18,6 +19,7 @@ import { ThemeService } from '../shared/services/theme.service';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './post-viewer-grid-wrapper.component.html',
   styleUrl: './post-viewer-grid-wrapper.component.scss',

@@ -15,7 +15,14 @@
 
 .post-viewer-card:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 20px 50px var(--card-shadow-hover);
+  box-shadow: 0 20px 50px var(--card-shadow-hover), 0 0 0 2px var(--card-hover-border);
+  border-color: var(--card-hover-border);
+}
+
+.post-viewer-card:active {
+  transform: translateY(-2px) scale(0.99);
+  box-shadow: 0 8px 20px var(--card-hover-shadow), 0 0 0 2px var(--card-active-border);
+  border-color: var(--card-active-border);
 }
 
 .post-viewer-card__image-wrapper {

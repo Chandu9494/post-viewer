@@ -12,6 +12,14 @@
     <mat-card-content *ngIf="post && displayValue" class="post-viewer-card__content">
       <div class="post-viewer-card__image-wrapper" *ngIf="post?.imageUrl">
         <img *ngIf="post?.imageUrl" class="post-viewer-card__image" [src]="post.imageUrl" />
+        <button
+          class="post-viewer-card__favourite-btn"
+          [ngClass]="{ 'post-viewer-card__favourite-btn--active': isFavourite }"
+          (click)="onFavouriteClick($event)"
+          [attr.aria-label]="isFavourite ? 'Remove from favourites' : 'Add to favourites'"
+        >
+          <mat-icon>{{ isFavourite ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
       </div>
 
       <div class="post-viewer-card__content" *ngIf="post.id === selectedPostId; else defaultContent"

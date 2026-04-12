@@ -11,6 +11,37 @@
       <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">dark_mode</mat-icon>
     </div>
   </div>
+  <div class="post-viewer-wrapper__filter-bar">
+    <div class="post-viewer-wrapper__filter-bar__search">
+      <mat-icon class="post-viewer-wrapper__filter-bar__search__icon">search</mat-icon>
+      <input
+        type="text"
+        class="post-viewer-wrapper__filter-bar__search__input"
+        placeholder="Search posts..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange($event)"
+        aria-label="Search posts"
+      />
+      <button
+        *ngIf="searchQuery"
+        class="post-viewer-wrapper__filter-bar__search__clear"
+        (click)="searchQuery = ''; onSearchChange('')"
+        aria-label="Clear search"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <button
+      class="post-viewer-wrapper__filter-bar__fav-filter"
+      [ngClass]="{ 'post-viewer-wrapper__filter-bar__fav-filter--active': showFavouritesOnly }"
+      (click)="onToggleFavouritesFilter()"
+      [attr.aria-label]="showFavouritesOnly ? 'Show all posts' : 'Show favourites only'"
+    >
+      <mat-icon>{{ showFavouritesOnly ? 'favorite' : 'favorite_border' }}</mat-icon>
+      <span>Favourites</span>
+    </button>
+  </div>
+
   <div class="post-viewer-wrapper__info_section">
     <div class="post-viewer-wrapper__info_section__selected_post_id">
       {{
@@ -45,13 +76,15 @@
     class="post-viewer-wrapper__card_container"
   >
     <app-post-viewer-card
-      *ngFor="let post of postsList | async"
+      *ngFor="let post of filteredPostsList | async"
       class="post-viewer-wrapper__card"
       tabindex="0"
       role="button"
       [post]="post"
       [displayValue]="displayKey | async"
       [selectedPostId]="selectedPostId | async"
+      [isFavourite]="(favourites$ | async)?.has(post.id) ?? false"
+      (favouriteToggled)="onFavouriteToggled($event)"
       (click)="onCardClicked(post.id)"
       (keydown.enter)="onCardClicked(post.id)"
     ></app-post-viewer-card>

@@ -1,13 +1,15 @@
 <div class="post-viewer-wrapper">
   <div class="post-viewer-wrapper__header">
     <h1 class="post-viewer-wrapper__header__title">Posts Viewer</h1>
-    <button
-      class="post-viewer-wrapper__header__theme-toggle"
-      [attr.aria-label]="(theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-      (click)="onToggleTheme()"
-    >
-      <mat-icon>{{ (theme$ | async) === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
-    </button>
+    <div class="post-viewer-wrapper__header__theme-toggle">
+      <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">light_mode</mat-icon>
+      <mat-slide-toggle
+        [checked]="(theme$ | async) === 'dark'"
+        (change)="onToggleTheme()"
+        [attr.aria-label]="(theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+      ></mat-slide-toggle>
+      <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">dark_mode</mat-icon>
+    </div>
   </div>
   <div class="post-viewer-wrapper__info_section">
     <div class="post-viewer-wrapper__info_section__selected_post_id">

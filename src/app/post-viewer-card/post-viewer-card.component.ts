@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { IPost } from '../shared/post-viewer.interface';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { LazyLoadDirective } from '../shared/directives/lazy-load.directive';
+import { IPost } from '../shared/post-viewer.interface';
 
 @Component({
   selector: 'app-post-viewer-card',

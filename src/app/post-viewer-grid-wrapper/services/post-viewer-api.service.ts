@@ -9,8 +9,24 @@ export class PostViewerApiService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  getPosts(): Observable<IPost[]> {
-    return this.httpClient.get<IPost[]>(this.baseUrl);
+  getPosts(options?: { initial?: boolean; page?: number; sortBy?: string; sortOrder?: string }): Observable<IPost[]> {
+    const params = new URLSearchParams();
+    
+    if (options?.initial) {
+      params.append('initial', 'true');
+    }
+    if (options?.page) {
+      params.append('page', options.page.toString());
+    }
+    if (options?.sortBy) {
+      params.append('sortBy', options.sortBy);
+    }
+    if (options?.sortOrder) {
+      params.append('sortOrder', options.sortOrder);
+    }
+    
+    const url = params.toString() ? `${this.baseUrl}?${params}` : this.baseUrl;
+    return this.httpClient.get<IPost[]>(url);
   }
 
   addPost(post: FormData): Observable<IPost> {

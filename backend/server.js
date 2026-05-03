@@ -54,24 +54,29 @@ const upload = multer({
   }
 });
 
-// GET all posts with sorting and pagination
+// GET all posts with sorting and pagination - optimized for initial load
 app.get('/api/posts', async (req, res) => {
   try {
     const { 
       sortBy = 'createdAt', 
       sortOrder = 'desc', 
       page = 1, 
-      limit = 9 
+      limit = 6, // Reduced initial load for faster FCP
+      initial = req.query.initial === 'true' // Flag for initial load
     } = req.query;
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const actualLimit = initial && parseInt(page) === 1 ? 3 : parseInt(limit);
+    const skip = (parseInt(page) - 1) * actualLimit;
     const sortOptions = {};
     sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
 
+    // Use lean() for faster queries when we don't need Mongoose documents
     const posts = await Post.find()
       .sort(sortOptions)
       .skip(skip)
-      .limit(parseInt(limit));
+      .limit(actualLimit)
+      .lean() // Returns plain JavaScript objects instead of Mongoose documents
+      .select('title body imageUrl createdAt updatedAt'); // Only select needed fields
 
     const total = await Post.countDocuments();
 
@@ -79,9 +84,10 @@ app.get('/api/posts', async (req, res) => {
       posts,
       pagination: {
         currentPage: parseInt(page),
-        totalPages: Math.ceil(total / parseInt(limit)),
+        totalPages: Math.ceil(total / actualLimit),
         totalPosts: total,
-        hasMore: skip + parseInt(limit) < total
+        hasMore: skip + actualLimit < total,
+        initialLoad: initial && parseInt(page) === 1
       }
     });
   } catch (error) {

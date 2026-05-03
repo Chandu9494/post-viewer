@@ -266,6 +266,10 @@
       background: var(--hover-bg);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+
+      .post-viewer-wrapper__add-post-card__icon {
+        color: var(--accent);
+      }
     }
 
     &:active {
@@ -284,9 +288,10 @@
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--accent);
+      color: var(--text-secondary);
       line-height: 1;
       overflow: visible !important;
+      transition: color 0.2s ease;
     }
 
     &__text {

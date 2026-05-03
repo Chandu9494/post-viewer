@@ -57,7 +57,7 @@ export class PostViewerActionService {
     this._destroy.complete();
   }
 
-  dispatchLoadPosts(): void {
+  dispatchLoadPosts(initial = false): void {
     this.store.dispatch(getPosts());
     this.store.dispatch(loadImages());
   }

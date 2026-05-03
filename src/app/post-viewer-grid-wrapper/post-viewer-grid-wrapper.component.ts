@@ -16,9 +16,10 @@ import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPostDialogComponent } from '../add-post-dialog/add-post-dialog.component';
 import { EditPostDialogComponent } from '../edit-post-dialog/edit-post-dialog.component';
+import { ShimmerCardComponent } from '../shared/components/shimmer-card.component';
 import { Store } from '@ngrx/store';
 import * as PostActions from '../store/posts.action';
-import { selectActivePostId, selectAllPosts } from '../store/posts.selectors';
+import { selectAllPosts } from '../store/posts.selectors';
 
 @Component({
   selector: 'app-post-viewer-grid-wrapper',
@@ -26,16 +27,17 @@ import { selectActivePostId, selectAllPosts } from '../store/posts.selectors';
   imports: [
     CommonModule,
     PostViewerCardComponent,
+    ShimmerCardComponent,
     MatCardModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
     MatIconModule,
-    MatSlideToggleModule,
+    MatProgressSpinnerModule,
     FormsModule,
     MatDialogModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './post-viewer-grid-wrapper.component.html',
-  styleUrls: ['./post-viewer-grid-wrapper.component.scss'],
+  styleUrls: ['./post-viewer-grid-wrapper.component.scss', './post-viewer-grid-wrapper.sequential.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
@@ -130,7 +132,7 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.postViewerActionService.initialize();
+    this.postViewerActionService.initialize(); // Initialize with optimized initial load
   }
 
   onCardClicked(postId: string) {

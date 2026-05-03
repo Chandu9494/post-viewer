@@ -11,21 +11,15 @@
   <ng-template #postContent>
     <mat-card-content *ngIf="post" class="post-viewer-card__content">
       <div class="post-viewer-card__image-wrapper" *ngIf="post?.imageUrl">
-        <img *ngIf="post?.imageUrl" class="post-viewer-card__image" [src]="post.imageUrl" />
+        <img *ngIf="post?.imageUrl" class="post-viewer-card__image" [src]="post.imageUrl"
+          (error)="onImageError($event)" />
         <div class="post-viewer-card__actions">
-          <button
-            class="post-viewer-card__favourite-btn"
-            [ngClass]="{ 'post-viewer-card__favourite-btn--active': isFavourite }"
-            (click)="onFavouriteClick($event)"
-            [attr.aria-label]="isFavourite ? 'Remove from favourites' : 'Add to favourites'"
-          >
+          <button class="post-viewer-card__favourite-btn"
+            [ngClass]="{ 'post-viewer-card__favourite-btn--active': isFavourite }" (click)="onFavouriteClick($event)"
+            [attr.aria-label]="isFavourite ? 'Remove from favourites' : 'Add to favourites'">
             <mat-icon>{{ isFavourite ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
-          <button
-            class="post-viewer-card__edit-btn"
-            (click)="onEditClick($event)"
-            aria-label="Edit post"
-          >
+          <button class="post-viewer-card__edit-btn" (click)="onEditClick($event)" aria-label="Edit post">
             <mat-icon>edit</mat-icon>
           </button>
         </div>

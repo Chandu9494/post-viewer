@@ -2,92 +2,57 @@
   <div class="post-viewer-wrapper__header">
     <h1 class="post-viewer-wrapper__header__title">Posts Viewer</h1>
     <div class="post-viewer-wrapper__header__theme-toggle">
-      <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">light_mode</mat-icon>
-      <mat-slide-toggle
-        [checked]="(theme$ | async) === 'dark'"
-        (change)="onToggleTheme()"
-        [attr.aria-label]="(theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-      ></mat-slide-toggle>
-      <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">dark_mode</mat-icon>
+      <!-- <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">light_mode</mat-icon> -->
+      <span class="post-viewer-wrapper__header__theme-toggle__label" [ngClass]="{
+    'light-text': (theme$ | async) === 'dark',
+    'dark-text': (theme$ | async) === 'light'
+  }">Light</span>
+      <mat-slide-toggle [checked]="(theme$ | async) === 'dark'" (change)="onToggleTheme()"
+        [attr.aria-label]="(theme$ | async) === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"></mat-slide-toggle>
+      <span class="post-viewer-wrapper__header__theme-toggle__label" [ngClass]="{
+    'light-text': (theme$ | async) === 'dark',
+    'dark-text': (theme$ | async) === 'light'
+  }">Dark</span>
+      <!-- <mat-icon class="post-viewer-wrapper__header__theme-toggle__icon">dark_mode</mat-icon> -->
     </div>
   </div>
   <div class="post-viewer-wrapper__filter-bar">
     <div class="post-viewer-wrapper__filter-bar__search">
       <mat-icon class="post-viewer-wrapper__filter-bar__search__icon">search</mat-icon>
-      <input
-        type="text"
-        class="post-viewer-wrapper__filter-bar__search__input"
-        placeholder="Search posts..."
-        [(ngModel)]="searchQuery"
-        (ngModelChange)="onSearchChange($event)"
-        aria-label="Search posts"
-      />
-      <button
-        *ngIf="searchQuery"
-        class="post-viewer-wrapper__filter-bar__search__clear"
-        (click)="searchQuery = ''; onSearchChange('')"
-        aria-label="Clear search"
-      >
+      <input type="text" class="post-viewer-wrapper__filter-bar__search__input" placeholder="Search posts..."
+        [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange($event)" aria-label="Search posts" />
+      <button *ngIf="searchQuery" class="post-viewer-wrapper__filter-bar__search__clear"
+        (click)="searchQuery = ''; onSearchChange('')" aria-label="Clear search">
         <mat-icon>close</mat-icon>
       </button>
     </div>
-    <button
-      class="post-viewer-wrapper__filter-bar__fav-filter"
+    <button class="post-viewer-wrapper__filter-bar__fav-filter"
       [ngClass]="{ 'post-viewer-wrapper__filter-bar__fav-filter--active': showFavouritesOnly }"
       (click)="onToggleFavouritesFilter()"
-      [attr.aria-label]="showFavouritesOnly ? 'Show all posts' : 'Show favourites only'"
-    >
+      [attr.aria-label]="showFavouritesOnly ? 'Show all posts' : 'Show favourites only'">
       <mat-icon>{{ showFavouritesOnly ? 'favorite' : 'favorite_border' }}</mat-icon>
       <span>Favourites</span>
     </button>
   </div>
 
-  <div class="post-viewer-wrapper__info_section">
-    <div class="post-viewer-wrapper__info_section__selected_post_id">
-      {{
-        (selectedPostId | async) !== 0
-          ? "Current post id : " + (selectedPostId | async)
-          : "View the content by clicking on each tile"
-      }}
-    </div>
-    <button
-      class="post-viewer-wrapper__info_section__reset_btn"
-      [ngClass]="{
-        'post-viewer-wrapper__info_section__reset_btn_disabled':
-          (selectedPostId | async) === 0
-      }"
-      [attr.aria-label]="'post viewer reset button'"
-      [disabled]="(selectedPostId | async) === 0"
-      (click)="onResetClicked()"
-    >
-      Reset
-    </button>
-  </div>
 
   <div *ngIf="loading | async; else postsGrid">
-  <app-post-viewer-card
-    *ngFor="let i of [1,2,3,4,5,6,7,8]"
-    [isLoading]="true"
-  ></app-post-viewer-card>
-</div>
-<ng-template #postsGrid>
-  <div
-    *ngIf="displayKey | async as key"
-    class="post-viewer-wrapper__card_container"
-  >
-    <app-post-viewer-card
-      *ngFor="let post of filteredPostsList | async"
-      class="post-viewer-wrapper__card"
-      tabindex="0"
-      role="button"
-      [post]="post"
-      [displayValue]="displayKey | async"
-      [selectedPostId]="selectedPostId | async"
-      [isFavourite]="(favourites$ | async)?.has(post.id) ?? false"
-      (favouriteToggled)="onFavouriteToggled($event)"
-      (click)="onCardClicked(post.id)"
-      (keydown.enter)="onCardClicked(post.id)"
-    ></app-post-viewer-card>
+    <app-post-viewer-card *ngFor="let i of [1,2,3,4,5,6,7,8]" [isLoading]="true"></app-post-viewer-card>
   </div>
+  <ng-template #postsGrid>
+    <div *ngIf="displayKey | async as key" class="post-viewer-wrapper__card_container">
+      <mat-card class="post-viewer-wrapper__add-post-card" (click)="onAddPost()" tabindex="0" role="button"
+        (keydown.enter)="onAddPost()">
+        <mat-card-content class="post-viewer-wrapper__add-post-card__content">
+          <mat-icon class="post-viewer-wrapper__add-post-card__icon">add_circle</mat-icon>
+          <p class="post-viewer-wrapper__add-post-card__text">Add Post</p>
+        </mat-card-content>
+      </mat-card>
+
+      <app-post-viewer-card *ngFor="let post of filteredPostsList | async" class="post-viewer-wrapper__card"
+        tabindex="0" role="button" [post]="post" [selectedPostId]="(selectedPostId)"
+        [isFavourite]="(favourites$ | async)?.has(post._id) ?? false" (favouriteToggled)="onFavouriteToggled($event)"
+        (click)="onCardClicked(post._id)" (keydown.enter)="onCardClicked(post._id)"></app-post-viewer-card>
+    </div>
   </ng-template>
 </div>

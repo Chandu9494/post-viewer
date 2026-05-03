@@ -40,6 +40,30 @@ export class PostsEffects {
     )
   );
 
+  createPostObs = createEffect(() =>
+    this.actions.pipe(
+      ofType(PostActions.createPost),
+      switchMap((action) =>
+        this.postViewerApiService.addPost(action.post).pipe(
+          map((post) => PostActions.createPostSuccess({ post })),
+          catchError((error) => of(PostActions.createPostFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  deletePostObs = createEffect(() =>
+    this.actions.pipe(
+      ofType(PostActions.deletePost),
+      switchMap((action) =>
+        this.postViewerApiService.deletePost(action.postId).pipe(
+          map(() => PostActions.deletePostSuccess({ postId: action.postId })),
+          catchError((error) => of(PostActions.createPostFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
   selectPostObs = createEffect(() =>
     this.actions.pipe(
       ofType(PostActions.selectPost),
@@ -52,7 +76,7 @@ export class PostsEffects {
           return of({ type: 'Load Failed' });
         }
 
-        const post = posts.find((p) => p.id === action.postId);
+        const post = posts.find((p) => p._id === action.postId);
         if (!post) {
           return of({ type: 'No Post Found' });
         }

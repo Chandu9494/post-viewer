@@ -3,7 +3,9 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  // overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   &__header {
     display: flex;
@@ -21,13 +23,40 @@
     &__theme-toggle {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
 
       &__icon {
         font-size: 20px;
         width: 20px;
         height: 20px;
-        color: var(--text-secondary);
+        color: white;
+        background-color: var(--bg-card);
+        border-radius: 50%;
+        padding: 4px;
+      }
+
+      &__label {
+        font-size: 14px;
+        font-weight: 500;
+        color: white;
+      }
+
+      ::ng-deep .mat-slide-toggle {
+        .mat-slide-toggle-bar {
+          background-color: var(--border);
+        }
+
+        .mat-slide-toggle-thumb {
+          background-color: var(--text-secondary);
+        }
+
+        &.mat-checked .mat-slide-toggle-bar {
+          background-color: var(--accent);
+        }
+
+        &.mat-checked .mat-slide-toggle-thumb {
+          background-color: white;
+        }
       }
     }
   }
@@ -160,6 +189,53 @@
     aspect-ratio: 1/1.1;
   }
 
+  &__add-post-card {
+    aspect-ratio: 1/1.1;
+    border: 2px dashed var(--border);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+
+    &:hover {
+      border-color: var(--accent);
+      background: var(--hover-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-secondary);
+    }
+
+    &__icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--accent);
+      line-height: 1;
+      overflow: visible !important;
+    }
+
+    &__text {
+      font-size: 16px;
+      font-weight: 500;
+      // padding: 20px;
+      align-content: center;
+    }
+  }
+
   &__info_section {
     display: flex;
     justify-content: space-between;
@@ -187,10 +263,12 @@
       cursor: pointer;
       transition: all 0.25s ease;
       box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+
       &:hover {
         transform: translateY(-1px);
         box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
       }
+
       &:active {
         transform: scale(0.96);
       }
@@ -203,4 +281,12 @@
       }
     }
   }
+}
+
+.light-text {
+  color: #ffffff;
+}
+
+.dark-text {
+  color: #000000;
 }

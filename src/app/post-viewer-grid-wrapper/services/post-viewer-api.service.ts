@@ -5,11 +5,19 @@ import { IPost } from '../../shared/post-viewer.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PostViewerApiService {
-  private readonly url = 'http://jsonplaceholder.typicode.com/posts';
+  private readonly baseUrl = 'http://localhost:3001/api/posts';
 
   constructor(private readonly httpClient: HttpClient) {}
 
   getPosts(): Observable<IPost[]> {
-    return this.httpClient.get<IPost[]>(this.url);
+    return this.httpClient.get<IPost[]>(this.baseUrl);
+  }
+
+  addPost(post: FormData): Observable<IPost> {
+    return this.httpClient.post<IPost>(this.baseUrl, post);
+  }
+
+  deletePost(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

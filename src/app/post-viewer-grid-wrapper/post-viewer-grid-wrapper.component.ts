@@ -8,10 +8,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ThemeService } from '../shared/services/theme.service';
 import { FavouritesService } from '../shared/services/favourites.service';
 import { IPost } from '../shared/post-viewer.interface';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { AddPostDialogComponent } from '../add-post-dialog/add-post-dialog.component';
+import { Store } from '@ngrx/store';
+import * as PostActions from '../store/posts.action';
+import { selectActivePostId } from '../store/posts.selectors';
 
 @Component({
   selector: 'app-post-viewer-grid-wrapper',
@@ -25,6 +31,7 @@ import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
     MatIconModule,
     MatSlideToggleModule,
     FormsModule,
+    MatDialogModule,
   ],
   templateUrl: './post-viewer-grid-wrapper.component.html',
   styleUrl: './post-viewer-grid-wrapper.component.scss',
@@ -32,7 +39,7 @@ import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 })
 export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
   readonly displayKey = this.postViewerActionService.displayKey;
-  readonly selectedPostId = this.postViewerActionService.selectedPostIdObs;
+  readonly selectedPostId = this.postViewerActionService.selectedPostId;
   readonly loading = this.postViewerActionService.loadingObs;
   readonly theme$ = this.themeService.theme$;
   readonly favourites$ = this.favouritesService.favourites$;
@@ -48,7 +55,9 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
   constructor(
     private readonly postViewerActionService: PostViewerActionService,
     private readonly themeService: ThemeService,
-    private readonly favouritesService: FavouritesService
+    private readonly favouritesService: FavouritesService,
+    private readonly dialog: MatDialog,
+    private readonly store: Store
   ) {
     this.filteredPostsList = combineLatest([
       this.postViewerActionService.postsList,
@@ -69,7 +78,7 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
         }
 
         if (showFavs) {
-          filtered = filtered.filter((post) => favourites.has(post.id));
+          filtered = filtered.filter((post) => favourites.has(post._id));
         }
 
         return filtered;
@@ -81,7 +90,7 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
     this.postViewerActionService.initialize();
   }
 
-  onCardClicked(postId: number) {
+  onCardClicked(postId: string) {
     this.postViewerActionService.onCardClicked(postId);
   }
 
@@ -93,7 +102,7 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
     this.themeService.toggleTheme();
   }
 
-  onFavouriteToggled(postId: number): void {
+  onFavouriteToggled(postId: string): void {
     this.favouritesService.toggleFavourite(postId);
   }
 
@@ -104,6 +113,18 @@ export class PostViewerGridWrapperComponent implements OnInit, OnDestroy {
   onToggleFavouritesFilter(): void {
     this.showFavouritesOnly = !this.showFavouritesOnly;
     this._showFavouritesOnly.next(this.showFavouritesOnly);
+  }
+
+  onAddPost(): void {
+    const dialogRef = this.dialog.open(AddPostDialogComponent, {
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((formData: FormData) => {
+      if (formData) {
+        this.store.dispatch(PostActions.createPost({ post: formData }));
+      }
+    });
   }
 
   ngOnDestroy(): void {

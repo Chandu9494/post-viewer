@@ -1,6 +1,6 @@
 export interface IPost {
-  userId: string;
-  id: number;
+  _id: string;
+  id: string;
   title: string;
   body: string;
   imageUrl?: string; 
@@ -9,8 +9,8 @@ export interface IPost {
 export interface IPostsState {
   posts: IPost[];
   error: string | null;
-  propertyKeyMap: { [postId: number]: string };
-  selectedPostId?: number | null;
+  propertyKeyMap: { [postId: string]: string };
+  selectedPostId?: string | null;
 }
 
 export interface ImageState {

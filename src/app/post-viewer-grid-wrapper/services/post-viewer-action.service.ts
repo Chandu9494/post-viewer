@@ -13,13 +13,13 @@ import { loadImages } from '../../store/image.action';
 @Injectable({ providedIn: 'root' })
 export class PostViewerActionService {
   private readonly _displayKey = new BehaviorSubject<string>('title');
-  private _selectedPostId = new BehaviorSubject<number>(0);
+  private _selectedPostId = new BehaviorSubject<string>('');
   private _destroy = new Subject();
 
   postsList: Observable<IPost[]>;
   displayKey: Observable<string>;
-  selectedPostIdObs: Observable<number>;
-  selectedPostId: number = -1;
+  selectedPostIdObs: Observable<string>;
+  selectedPostId: string = '';
   images: Observable<string[]>;
   loadingObs: Observable<boolean>;
 
@@ -33,7 +33,7 @@ export class PostViewerActionService {
       map(([posts, images]) =>
         posts.map(post => ({
           ...post,
-          imageUrl: images[post.id % images.length]
+          imageUrl: images[parseInt(post._id) % images.length]
         }))
       )
     );
@@ -62,13 +62,13 @@ export class PostViewerActionService {
     this.store.dispatch(loadImages());
   }
 
-  onCardClicked(postId: number): void {
+  onCardClicked(postId: string): void {
     this._selectedPostId.next(postId);
     this.store.dispatch(selectPost({ postId }));
     this.getDisplayValue(postId);
   }
 
-  getDisplayValue(postId: number): void {
+  getDisplayValue(postId: string): void {
     this.store
       .select(selectPropertyKeyMap)
       .pipe(
@@ -82,7 +82,7 @@ export class PostViewerActionService {
   }
 
   onResetClicked(): void {
-    this._selectedPostId.next(0);
+    this._selectedPostId.next('');
     this.store.dispatch(resetCards());
     this.onDestroy();
   }

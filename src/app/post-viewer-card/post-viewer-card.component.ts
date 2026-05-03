@@ -1,33 +1,22 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { IPost } from '../shared/post-viewer.interface';
 import { CommonModule } from '@angular/common';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-post-viewer-card',
-  imports: [MatCardModule, CommonModule, MatTooltipModule, MatIconModule],
+  imports: [MatCardModule, CommonModule, MatIconModule],
   templateUrl: './post-viewer-card.component.html',
   styleUrl: './post-viewer-card.component.scss',
 })
-export class PostViewerCardComponent implements OnChanges {
+export class PostViewerCardComponent {
   @Input() post: IPost | undefined;
-  @Input() displayValue: string | null = 'title';
-  @Input() selectedPostId: number | null = 0;
+  @Input() selectedPostId: string | null = null;
   @Input() isLoading = false;
   @Input() isFavourite = false;
-  @Output() favouriteToggled = new EventEmitter<number>();
-  readonly displayFields = ['userId', 'id', 'title', 'body'];
-  displayText: string | number = '';
+  @Output() favouriteToggled = new EventEmitter<string>();
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['displayValue']) {
-      if (this.post) {
-        this.displayText =  this.post[this.displayValue as keyof IPost] ?? '';
-      }
-    }
-  }
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'https://picsum.photos/300/200';
@@ -36,7 +25,7 @@ export class PostViewerCardComponent implements OnChanges {
   onFavouriteClick(event: Event): void {
     event.stopPropagation();
     if (this.post) {
-      this.favouriteToggled.emit(this.post.id);
+      this.favouriteToggled.emit(this.post._id);
     }
   }
 }

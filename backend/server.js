@@ -8,6 +8,7 @@ const Post = require('./models/Post');
 
 const app = express();
 const PORT = 3001;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/post-viewer';
@@ -53,11 +54,36 @@ const upload = multer({
   }
 });
 
-// GET all posts
+// GET all posts with sorting and pagination
 app.get('/api/posts', async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
-    res.json(posts);
+    const { 
+      sortBy = 'createdAt', 
+      sortOrder = 'desc', 
+      page = 1, 
+      limit = 9 
+    } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+    const posts = await Post.find()
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const total = await Post.countDocuments();
+
+    res.json({
+      posts,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / parseInt(limit)),
+        totalPosts: total,
+        hasMore: skip + parseInt(limit) < total
+      }
+    });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch posts' });
   }
@@ -88,7 +114,7 @@ app.post('/api/posts', upload.single('image'), async (req, res) => {
     const newPost = new Post({
       title,
       body,
-      imageUrl: req.file ? `/uploads/${req.file.filename}` : null
+      imageUrl: req.file ? `${BASE_URL}/uploads/${req.file.filename}` : null
     });
 
     const savedPost = await newPost.save();
@@ -106,7 +132,7 @@ app.put('/api/posts/:id', upload.single('image'), async (req, res) => {
     const updateData = {};
     if (title) updateData.title = title;
     if (body) updateData.body = body;
-    if (req.file) updateData.imageUrl = `/uploads/${req.file.filename}`;
+    if (req.file) updateData.imageUrl = `${BASE_URL}/uploads/${req.file.filename}`;
 
     const post = await Post.findByIdAndUpdate(
       req.params.id,
@@ -135,7 +161,9 @@ app.delete('/api/posts/:id', async (req, res) => {
 
     // Delete associated image if exists
     if (post.imageUrl) {
-      const imagePath = path.join(__dirname, post.imageUrl);
+      // Extract filename from full URL
+      const filename = post.imageUrl.split('/').pop();
+      const imagePath = path.join(__dirname, 'uploads', filename);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }

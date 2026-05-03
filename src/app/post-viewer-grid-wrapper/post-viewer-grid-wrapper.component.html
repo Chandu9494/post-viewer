@@ -26,6 +26,13 @@
         <mat-icon>close</mat-icon>
       </button>
     </div>
+    <div class="post-viewer-wrapper__filter-bar__sort">
+      <mat-icon class="post-viewer-wrapper__filter-bar__sort__icon">sort</mat-icon>
+      <button class="post-viewer-wrapper__filter-bar__sort__order"
+        (click)="toggleSortOrder()" [attr.aria-label]="sortOrder === 'desc' ? 'Sort ascending' : 'Sort descending'">
+        <mat-icon>{{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+      </button>
+    </div>
     <button class="post-viewer-wrapper__filter-bar__fav-filter"
       [ngClass]="{ 'post-viewer-wrapper__filter-bar__fav-filter--active': showFavouritesOnly }"
       (click)="onToggleFavouritesFilter()"
@@ -40,7 +47,8 @@
     <app-post-viewer-card *ngFor="let i of [1,2,3,4,5,6,7,8]" [isLoading]="true"></app-post-viewer-card>
   </div>
   <ng-template #postsGrid>
-    <div *ngIf="displayKey | async as key" class="post-viewer-wrapper__card_container">
+    <div *ngIf="displayKey | async as key" class="post-viewer-wrapper__card_container" 
+     (scroll)="onScroll($event)">
       <mat-card class="post-viewer-wrapper__add-post-card" (click)="onAddPost()" tabindex="0" role="button"
         (keydown.enter)="onAddPost()">
         <mat-card-content class="post-viewer-wrapper__add-post-card__content">
@@ -52,7 +60,13 @@
       <app-post-viewer-card *ngFor="let post of filteredPostsList | async" class="post-viewer-wrapper__card"
         tabindex="0" role="button" [post]="post" [selectedPostId]="(selectedPostId)"
         [isFavourite]="(favourites$ | async)?.has(post._id) ?? false" (favouriteToggled)="onFavouriteToggled($event)"
-        (click)="onCardClicked(post._id)" (keydown.enter)="onCardClicked(post._id)"></app-post-viewer-card>
+        (editClicked)="onEditPost($event)" (click)="onCardClicked(post._id)" (keydown.enter)="onCardClicked(post._id)"></app-post-viewer-card>
+      
+      <!-- Loading indicator for infinite scroll -->
+      <div *ngIf="loadingMore$ | async" class="post-viewer-wrapper__loading-more">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Loading more posts...</span>
+      </div>
     </div>
   </ng-template>
 </div>

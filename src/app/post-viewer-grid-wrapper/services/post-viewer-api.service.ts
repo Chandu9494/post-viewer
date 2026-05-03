@@ -5,7 +5,7 @@ import { IPost } from '../../shared/post-viewer.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PostViewerApiService {
-  private readonly baseUrl = 'http://localhost:3001/api/posts';
+  readonly baseUrl = 'http://localhost:3001/api/posts';
 
   constructor(private readonly httpClient: HttpClient) {}
 
@@ -15,6 +15,10 @@ export class PostViewerApiService {
 
   addPost(post: FormData): Observable<IPost> {
     return this.httpClient.post<IPost>(this.baseUrl, post);
+  }
+
+  updatePost(id: string, post: FormData): Observable<IPost> {
+    return this.httpClient.put<IPost>(`${this.baseUrl}/${id}`, post);
   }
 
   deletePost(id: string): Observable<void> {

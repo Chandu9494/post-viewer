@@ -24,6 +24,24 @@ export const postsReducer = createReducer(
     ...state,
     error,
   })),
+  on(PostActions.updatePostSuccess, (state, { post }) => ({
+    ...state,
+    posts: state.posts.map(p => p._id === post._id ? post : p),
+    error: null,
+  })),
+  on(PostActions.updatePostFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
+  on(PostActions.loadMorePostsSuccess, (state, { posts, hasMore }) => ({
+    ...state,
+    posts: [...state.posts, ...posts],
+    error: null,
+  })),
+  on(PostActions.loadMorePostsFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
   on(PostActions.deletePostSuccess, (state, { postId }) => ({
     ...state,
     posts: state.posts.filter(p => p._id !== postId),

@@ -3,7 +3,9 @@ export interface IPost {
   id: string;
   title: string;
   body: string;
-  imageUrl?: string; 
+  imageUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IPostsState {

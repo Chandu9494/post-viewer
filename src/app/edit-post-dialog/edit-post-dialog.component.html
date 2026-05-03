@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Edit Post</h2>
+<mat-dialog-content class="edit-post-dialog__content">
+  <form [formGroup]="editForm">
+    <mat-form-field appearance="outline" class="edit-post-dialog__field">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" placeholder="Enter post title" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="edit-post-dialog__field">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="body" placeholder="Enter post description" rows="4" required></textarea>
+    </mat-form-field>
+
+  <div class="edit-post-dialog__image-section">
+    <div class="edit-post-dialog__file-input-wrapper">
+      <label class="edit-post-dialog__file-label">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="edit-post-dialog__file-input" />
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Change Image (optional)</span>
+      </label>
+    </div>
+
+    <div *ngIf="imagePreview" class="edit-post-dialog__image-preview">
+      <img [src]="imagePreview" alt="Preview" />
+      <button mat-icon-button class="edit-post-dialog__remove-image" (click)="onRemoveImage()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onSave()"
+    [disabled]="!editForm.get('title')?.value?.trim() || !editForm.get('body')?.value?.trim()"
+  >
+    Save Changes
+  </button>
+</mat-dialog-actions>

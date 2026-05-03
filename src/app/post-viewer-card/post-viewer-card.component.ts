@@ -16,6 +16,7 @@ export class PostViewerCardComponent {
   @Input() isLoading = false;
   @Input() isFavourite = false;
   @Output() favouriteToggled = new EventEmitter<string>();
+  @Output() editClicked = new EventEmitter<IPost>();
 
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
@@ -26,6 +27,13 @@ export class PostViewerCardComponent {
     event.stopPropagation();
     if (this.post) {
       this.favouriteToggled.emit(this.post._id);
+    }
+  }
+
+  onEditClick(event: Event): void {
+    event.stopPropagation();
+    if (this.post) {
+      this.editClicked.emit(this.post);
     }
   }
 }

@@ -29,11 +29,11 @@ export class PostViewerActionService {
       this.store.select(selectAllPosts),
       this.images
     ]).pipe(
-      filter(([posts, images]) => posts.length > 0 && images.length > 0),
+      filter(([posts, images]) => posts.length > 0),
       map(([posts, images]) =>
-        posts.map(post => ({
+        posts.map((post, index) => ({
           ...post,
-          imageUrl: images[parseInt(post._id) % images.length]
+          imageUrl: post.imageUrl || images[index % images.length]
         }))
       )
     );

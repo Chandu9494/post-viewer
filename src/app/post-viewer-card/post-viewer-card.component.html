@@ -9,37 +9,26 @@
   </ng-container>
 
   <ng-template #postContent>
-    <mat-card-content *ngIf="post && displayValue" class="post-viewer-card__content">
+    <mat-card-content *ngIf="post" class="post-viewer-card__content">
       <div class="post-viewer-card__image-wrapper" *ngIf="post?.imageUrl">
-        <img *ngIf="post?.imageUrl" class="post-viewer-card__image" [src]="post.imageUrl" />
-        <button
-          class="post-viewer-card__favourite-btn"
-          [ngClass]="{ 'post-viewer-card__favourite-btn--active': isFavourite }"
-          (click)="onFavouriteClick($event)"
-          [attr.aria-label]="isFavourite ? 'Remove from favourites' : 'Add to favourites'"
-        >
-          <mat-icon>{{ isFavourite ? 'favorite' : 'favorite_border' }}</mat-icon>
-        </button>
-      </div>
-
-      <div class="post-viewer-card__content" *ngIf="post.id === selectedPostId; else defaultContent"
-        matTooltip="{{ displayValue + ': ' + displayText }}" matTooltipPosition="right"
-        [attr.aria-label]="'card content ' + displayValue + ': ' + displayText">
-        {{ displayText }}
-      </div>
-
-      <ng-template #defaultContent>
-        <div matTooltip="{{ post.title }}" matTooltipPosition="right">
-          {{ post.title }}
+        <img *ngIf="post?.imageUrl" class="post-viewer-card__image" [src]="post.imageUrl"
+          (error)="onImageError($event)" />
+        <div class="post-viewer-card__actions">
+          <button class="post-viewer-card__favourite-btn"
+            [ngClass]="{ 'post-viewer-card__favourite-btn--active': isFavourite }" (click)="onFavouriteClick($event)"
+            [attr.aria-label]="isFavourite ? 'Remove from favourites' : 'Add to favourites'">
+            <mat-icon>{{ isFavourite ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+          <button class="post-viewer-card__edit-btn" (click)="onEditClick($event)" aria-label="Edit post">
+            <mat-icon>edit</mat-icon>
+          </button>
         </div>
-      </ng-template>
-    </mat-card-content>
+      </div>
 
-    <div class="post-viewer-card__content_indicators" *ngIf="displayFields?.length">
-      <span *ngFor="let field of displayFields" class="post-viewer-card__content_indicators_dot" [ngClass]="{
-        'post-viewer-card__content_indicators_dot_active':
-          post?.id === selectedPostId && field === displayValue
-      }"></span>
-    </div>
+      <div class="post-viewer-card__text-content">
+        <h3 class="post-viewer-card__title">{{ post.title }}</h3>
+        <p class="post-viewer-card__description">{{ post.body }}</p>
+      </div>
+    </mat-card-content>
   </ng-template>
 </mat-card>

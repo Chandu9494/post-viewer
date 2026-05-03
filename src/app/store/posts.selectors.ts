@@ -16,7 +16,7 @@ export const selectActivePostId = createSelector(
 export const selectActivePost = createSelector(
   selectAllPosts,
   selectActivePostId,
-  (allPosts, selectedId) => allPosts.find((post) => post?.id === selectedId)
+  (allPosts, selectedId) => allPosts.find((post) => post?._id === selectedId)
 );
 
 export const selectPropertyKeyMap = createSelector(

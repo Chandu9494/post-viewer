@@ -1,0 +1,29 @@
+.main-content {
+  min-height: calc(100vh - 80px); // Subtract header height
+  background: var(--bg-primary);
+  padding: 24px 0;
+}
+
+/* Loading state for router outlet */
+.main-content:has(router-outlet:empty) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Router outlet loading animation */
+router-outlet {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

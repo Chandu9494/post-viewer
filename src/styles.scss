@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+@import '@angular/material/prebuilt-themes/magenta-violet.css';
 
 :root,
 [data-theme="dark"] {
@@ -76,6 +77,8 @@
   )
 );
 
+@include mat.core();
+
 body {
   margin: 0;
   background: var(--bg-main);
@@ -83,3 +86,5 @@ body {
   font-family: Inter, system-ui, -apple-system, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+

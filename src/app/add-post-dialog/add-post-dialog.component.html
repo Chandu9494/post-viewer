@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Add New Post</h2>
+<mat-dialog-content class="add-post-dialog__content">
+  <mat-form-field appearance="outline" class="add-post-dialog__field">
+    <mat-label>Title</mat-label>
+    <input matInput [(ngModel)]="title" placeholder="Enter post title" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="add-post-dialog__field">
+    <mat-label>Description</mat-label>
+    <textarea matInput [(ngModel)]="body" placeholder="Enter post description" rows="4" required></textarea>
+  </mat-form-field>
+
+  <div class="add-post-dialog__image-section">
+    <div class="add-post-dialog__file-input-wrapper">
+      <label class="add-post-dialog__file-label">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="add-post-dialog__file-input" />
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Choose Image (optional)</span>
+      </label>
+    </div>
+
+    <div *ngIf="imagePreview" class="add-post-dialog__image-preview">
+      <img [src]="imagePreview" alt="Preview" />
+      <button mat-icon-button class="add-post-dialog__remove-image" (click)="onRemoveImage()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onSubmit()"
+    [disabled]="!title.trim() || !body.trim()"
+  >
+    Add Post
+  </button>
+</mat-dialog-actions>

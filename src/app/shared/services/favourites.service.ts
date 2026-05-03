@@ -4,17 +4,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class FavouritesService {
   private static readonly STORAGE_KEY = 'post-viewer-favourites';
-  private readonly _favourites = new BehaviorSubject<Set<number>>(
+  private readonly _favourites = new BehaviorSubject<Set<string>>(
     this.loadFromStorage()
   );
 
-  readonly favourites$: Observable<Set<number>> = this._favourites.asObservable();
+  readonly favourites$: Observable<Set<string>> = this._favourites.asObservable();
 
-  isFavourite(postId: number): boolean {
+  isFavourite(postId: string): boolean {
     return this._favourites.value.has(postId);
   }
 
-  toggleFavourite(postId: number): void {
+  toggleFavourite(postId: string): void {
     const current = new Set(this._favourites.value);
     if (current.has(postId)) {
       current.delete(postId);
@@ -25,19 +25,19 @@ export class FavouritesService {
     this.saveToStorage(current);
   }
 
-  private loadFromStorage(): Set<number> {
+  private loadFromStorage(): Set<string> {
     try {
       const stored = localStorage.getItem(FavouritesService.STORAGE_KEY);
       if (stored) {
-        return new Set<number>(JSON.parse(stored));
+        return new Set<string>(JSON.parse(stored));
       }
     } catch {
       // Ignore parse errors
     }
-    return new Set<number>();
+    return new Set<string>();
   }
 
-  private saveToStorage(favourites: Set<number>): void {
+  private saveToStorage(favourites: Set<string>): void {
     localStorage.setItem(
       FavouritesService.STORAGE_KEY,
       JSON.stringify([...favourites])
